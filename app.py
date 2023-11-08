@@ -1,4 +1,4 @@
-from database.db_sql import createTable, addMovie, getMovies, watchMovies, getWatched, delMovie
+from database.db_sql import createTable, addMovie, getMovies, moveMovies, getWatched, delMovie
 import datetime
 choice="""
 -------User Menu-------
@@ -8,6 +8,7 @@ choice="""
 4) Watch a Movie
 5) View watched Movies
 6) Delete a Movie
+e) exit
 
 Enter your choice: """
 
@@ -25,15 +26,28 @@ def printData(title, movies_list):
     for movie in movies_list:
         print(movie["movie_name"], movie["release_date"])
 
-def promptWatch():
-    movie_name = input("Enter the movie name you watched: ")
-    watchMovies(movie_name)
+def printDataWtached(title, user_name, movies_list):
+    print(f"\n-------{title}-------\n{user_name}:")
+    for user_data in movies_list:
+        print(user_data["movie_name"])
 
-def deletePrompt():
+def promptWatch():
+    user_name = input("Enter the user name: ")
+    movie_name = input("Enter the movie name you watched: ")
+    moveMovies(user_name, movie_name)
+    print("Movies moved Successfully!")
+
+def promptWatchedOver():
+    user_name = input("Enter the user name: ")
+    data_watched = getWatched(user_name)
+    printDataWtached("Watched Movies", user_name, data_watched)
+
+def delPrompt():
     movie_name = input("Enter the movie name you watched: ")
     delMovie(movie_name)
+    print("Movie Deleted!")
 
-while((ip:=input(choice)) != "6"):
+while((ip:=input(choice)) != "e"):
     if ip=="1":
         userInput()
 
@@ -49,11 +63,10 @@ while((ip:=input(choice)) != "6"):
         promptWatch()
 
     elif ip=="5":
-        data_watched = getWatched()
-        printData("Watced Movies", data_watched)
+        promptWatchedOver()
 
     elif ip=="6":
-        deletePrompt()
+        delPrompt()
 
     else:
-        print("Invalid user input! Quiting!")
+        print("Invalid user input!")

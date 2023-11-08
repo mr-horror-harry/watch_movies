@@ -1,5 +1,6 @@
 import sqlite3, datetime
-from database.queries import CREATE_MOVIES, INSERT_MOVIE, SELECT_MOVIE, SELECT_WATCHED, SELECT_BY_DATE, SET_WATCHED
+from database.queries import CREATE_MOVIES, INSERT_MOVIE, SELECT_MOVIE, SELECT_BY_DATE, DELETE_MOVIE
+from database.queries import CREATE_WATCHLIST, INSERT_WATCHED, SELECT_WATCHED
 
 connection = sqlite3.connect("./database/movies_data.db")
 connection.row_factory = sqlite3.Row
@@ -7,6 +8,7 @@ connection.row_factory = sqlite3.Row
 def createTable() -> None:
     with connection:
         connection.execute(CREATE_MOVIES)
+        connection.execute(CREATE_WATCHLIST)
 
 #add a new movie
 def addMovie(name, release_date):
@@ -26,15 +28,16 @@ def getMovies(upcoming=False):
             cursor=connection.execute(SELECT_MOVIE)
             return cursor
 
-def watchMovies(movie_name):
+def moveMovies(user_name, movie_name):
     with connection:
-        connection.execute(SET_WATCHED, (movie_name, ))
+        connection.execute(DELETE_MOVIE, (movie_name,))
+        connection.execute(INSERT_WATCHED, (user_name, movie_name))
 
-def getWatched():
+def getWatched(user_name):
     with connection:
-        cursor = connection.execute(SELECT_WATCHED)
+        cursor = connection.execute(SELECT_WATCHED, (user_name, ))
         return cursor
 
-def delMovie():
+def delMovie(movie_name):
     with connection:
         cursor = connection.execute(DELETE_MOVIE, (movie_name,))

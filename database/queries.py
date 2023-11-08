@@ -1,4 +1,5 @@
 #queries list
+#
 CREATE_MOVIES = """
 CREATE TABLE IF NOT EXISTS movies (
     movie_name TEXT,
@@ -9,6 +10,14 @@ CREATE TABLE IF NOT EXISTS movies (
 INSERT_MOVIE = "INSERT INTO movies (movie_name, release_date, status) VALUES (?,?,0);"
 SELECT_MOVIE = "SELECT * FROM movies;"
 SELECT_BY_DATE = "SELECT * FROM movies WHERE release_date>?;"
-SELECT_WATCHED = "SELECT * FROM movies WHERE status=1;"
-SET_WATCHED = "UPDATE movies SET status=1 WHERE movie_name=?;"
-DELETE_MOVIE = "DELETE FROM movie WHERE movie_name=?"
+DELETE_MOVIE = "DELETE FROM movies WHERE movie_name=?"
+
+#movie list for the watched menu
+CREATE_WATCHLIST="""
+CREATE TABLE IF NOT EXISTS watchlist(
+    user_name TEXT,
+    movie_name TEXT
+);
+"""
+INSERT_WATCHED = "INSERT INTO watchlist (user_name, movie_name) VALUES (?, ?);"
+SELECT_WATCHED = "SELECT * FROM watchlist WHERE user_name=?;"
